@@ -1,22 +1,36 @@
 import sys
 import time
+from services.trip_service import (
+    get_trip_category,
+    get_transportation_recommendation,
+    get_travel_season,
+    get_recommended_places,
+    calculate_daily_budget
+)
 
 def print_trip_summary(
-        destination: str, country: str, days: int, 
-        budget: float, currency: str, travel_month: str) -> None:
+        destination: str, days: int, budget: float, 
+        currency: str, travel_month: str) -> None:
     print("="*30)
     print("KelanaAI")
     print("="*30)
-    print(f"Destination: {destination}")
-    print(f"Country: {country}")
-    print(f"Days: {days}")
-    print(f"Budget: {budget} {currency}")
-    print(f"Travel Month: {travel_month}")
+    print(f"Destination     : {destination}")
+    print(f"Days            : {days}")
+    print(f"Budget          : {budget} {currency}")
+    print(f"Category        : {get_trip_category(budget)}")
+    print(f"Daily Budget    : {calculate_daily_budget(budget, days)} {currency}")
+    print(f"Transportation Recommendation: {get_transportation_recommendation(get_trip_category(budget))}")
+    print(f"Travel Month    : {travel_month}")
+    print(f"Travel Season   : {get_travel_season(travel_month)}")
+    print(f"\nRecommended Places: ")
+    for dest in destination.split(","): # enaknya digabung terus jadiin set dulu sih
+        for place in get_recommended_places(dest.strip()):
+            print(f"  - {place}")
 
-def get_input() -> any:
-    print("="*30)
+def get_input() -> list:
+    print("="*40)
     print("Masukkan Rencana Destinasimu - KelanaAI")
-    print("="*30)
+    print("="*40)
 
     hasil_input = []
 
@@ -34,15 +48,16 @@ def get_input() -> any:
                 sys.stdout.flush()
 
     print("\n"*2)
+
+    hasil_input[0] = ", ".join([dest.strip() for dest in hasil_input[0].split(",")])
     return hasil_input
 
 def main():
-    destination, country, days, budget, currency, travel_month = get_input()
-    print_trip_summary(destination, country, days, budget, currency, travel_month)
+    destination, days, budget, currency, travel_month = get_input()
+    print_trip_summary(destination, days, budget, currency, travel_month)
 
 input_list = {
-    "Destination:   ": str,
-    "Country:       ": str,
+    "Destination (use ',' for multiple destinations): ": str,
     "Days:          ": int,
     "Budget:        ": float,
     "Currency:      ": str,
