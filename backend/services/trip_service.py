@@ -29,35 +29,35 @@ def get_travel_season(month: str) -> str:
         return "Regular Season"
 
 
-def get_recommended_places(destination: str) -> list:
-    recommendations = {
-        "japan": [
-            "Tokyo Tower",
-            "Akihabara",
-            "Ogikubo"
-        ],
-        "france": [
-            "Eiffel Tower",
-            "Louvre Museum",
-            "Palace of Versailles"
-        ],
-        "italy": [
-            "Colosseum",
-            "Venice Canals",
-            "Leaning Tower of Pisa"
-        ],
-        "switzerland": [
-            "Matterhorn",
-            "Lake Geneva",
-            "Jungfraujoch"
-        ],
-        "netherlands": [
-            "Rijksmuseum",
-            "Keukenhof Gardens",
-            "Anne Frank House"
-        ]
-    }
+recommendations = {
+    "japan": [
+        "Tokyo Tower",
+        "Akihabara",
+        "Ogikubo"
+    ],
+    "france": [
+        "Eiffel Tower",
+        "Louvre Museum",
+        "Palace of Versailles"
+    ],
+    "italy": [
+        "Colosseum",
+        "Venice Canals",
+        "Leaning Tower of Pisa"
+    ],
+    "switzerland": [
+        "Matterhorn",
+        "Lake Geneva",
+        "Jungfraujoch"
+    ],
+    "netherlands": [
+        "Rijksmuseum",
+        "Keukenhof Gardens",
+        "Anne Frank House"
+    ]
+}
 
+def get_recommended_places(destination: str) -> list:
     return recommendations.get(
         destination.lower(),
         [
