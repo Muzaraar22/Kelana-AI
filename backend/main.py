@@ -17,6 +17,10 @@ class TripRequest(BaseModel):
     currency: str
     travel_month: str
 
+# setelah baca ppt 2 dan 3, note: mohon maaf ini materi banyak contradict nya
+# kalau mau REUSE dari session 2, transport recommendation BUKAN dari travel_style
+# tetapi dari BUDGET penentunya, transport -> trip categories -> budget (-> adalah depends)
+
 
 @app.get("/")
 def home():
@@ -36,6 +40,10 @@ def get_recommendations():
 @app.get("/api/v1/transportation")
 def get_transportations():
     return {"transportations": ["Bus", "Train", "Flight"]}
+
+@app.get("api/v1/trip-categories")
+def get_trip_categories():
+    return {"categories": ["Backpacker", "Standard", "Luxury"]}
 
 @app.post("/api/v1/trips")
 def create_trip(trip_request: TripRequest):
