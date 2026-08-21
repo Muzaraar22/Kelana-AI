@@ -1,5 +1,7 @@
 from pydantic import BaseModel
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from database import init_db, SessionLocal
+from models.trip import Trip
 from services.trip_service import (
     get_trip_category,
     get_transportation_recommendation,
@@ -10,12 +12,17 @@ from services.trip_service import (
 )
 
 app = FastAPI()
+init_db()
 class TripRequest(BaseModel):
     destination: str
     days: int
     budget: float
     currency: str
     travel_month: str
+
+class UpdateTripRequest(BaseModel):
+    budget: float
+
 
 # setelah baca ppt 2 dan 3, note: mohon maaf ini materi banyak contradict nya
 # kalau mau REUSE dari session 2, transport recommendation BUKAN dari travel_style
@@ -45,23 +52,80 @@ def get_transportations():
 def get_trip_categories():
     return {"categories": ["Backpacker", "Standard", "Luxury"]}
 
+@app.get ("/api/v1/trips")
+def list_trips():
+    db = SessionLocal()
+    trips = db. query (Trip) .all ()
+    db.close ()
+    return trips
+
+@app.get ("/api/v1/trips/{trip_id}")
+def get_trip(trip_id: int):
+    db = SessionLocal()
+    trip = db.query(Trip).filter(Trip.id == trip_id).first ()
+    db.close ()
+    if trip is None:
+        raise HTTPException (status_code=404, detail=f"Trip with id {trip_id} not found")
+    return trip
+
+
+
+#--------------------------- POST -----------------------------------
 @app.post("/api/v1/trips")
 def create_trip(trip_request: TripRequest):
-    trip_summary = {
-        "destination": trip_request.destination,
-        "days": trip_request.days,
-        "budget": trip_request.budget,
-        "currency": trip_request.currency,
-        "category": get_trip_category(trip_request.budget),
-        "daily_budget": calculate_daily_budget(trip_request.budget, trip_request.days),
-        "transportation_recommendation": get_transportation_recommendation(get_trip_category(trip_request.budget)),
-        "travel_month": trip_request.travel_month,
-        "travel_season": get_travel_season(trip_request.travel_month),
-        "recommended_places": []
-    }
-
+    recommended_places = []
     for dest in trip_request.destination.split(","):
-        for place in get_recommended_places(dest.strip()):
-            trip_summary["recommended_places"].append(place)
+            for place in get_recommended_places(dest.strip()):
+                recommended_places.append(place)
 
-    return trip_summary
+    trip = Trip (
+        destination=trip_request.destination,
+        days=trip_request.days,
+        budget=trip_request.budget,
+        currency=trip_request.currency,
+        category=get_trip_category(trip_request.budget),
+        daily_budget=calculate_daily_budget(trip_request.budget, trip_request.days),
+        transportation_recommendation=get_transportation_recommendation(get_trip_category(trip_request.budget)),
+        travel_month=trip_request.travel_month,
+        travel_season=get_travel_season(trip_request.travel_month),
+        recommended_places=recommended_places,
+    )
+
+    db = SessionLocal()
+    db.add(trip)
+    db.commit()
+    db.refresh(trip)
+    db.close()
+
+    return trip
+
+@app.delete("/api/v1/trips/{trip_id}/")
+def delete_trip(trip_id: int):
+    db = SessionLocal()
+    trip = db.query(Trip).filter(Trip.id == trip_id).first()
+    if trip is None:
+        db.close()
+        raise HTTPException(status_code=404, detail=f"Trip with id {trip_id} not found")
+    db.delete(trip)
+    db.commit()
+    db.close()
+    return {"message": f"Trip with id {trip_id} has been deleted."}
+
+@app.put("/api/v1/trips/{trip_id}/") #only recalculate budget (dan yang depends ke sini)
+def update_trip(trip_id: int, trip_request: UpdateTripRequest):
+    db = SessionLocal()
+    trip = db.query(Trip).filter(Trip.id == trip_id).first()
+    if trip is None:
+        db.close()
+        raise HTTPException(status_code=404, detail=f"Trip with id {trip_id} not found")
+
+    trip.budget = trip_request.budget
+    trip.category = get_trip_category(trip_request.budget)
+    trip.daily_budget = calculate_daily_budget(trip_request.budget, trip.days)
+    trip.transportation_recommendation = get_transportation_recommendation(trip.category)
+
+    db.commit()
+    db.refresh(trip)
+    db.close()
+
+    return trip
