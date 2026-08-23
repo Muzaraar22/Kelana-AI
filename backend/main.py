@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
 from database import init_db, SessionLocal
 from models.trip import Trip
+from services.bedrock_service import generate_ai_recommendation
 from services.trip_service import (
     get_trip_category,
     get_transportation_recommendation,
@@ -48,7 +49,7 @@ def get_recommendations():
 def get_transportations():
     return {"transportations": ["Bus", "Train", "Flight"]}
 
-@app.get("api/v1/trip-categories")
+@app.get("/api/v1/trip-categories")
 def get_trip_categories():
     return {"categories": ["Backpacker", "Standard", "Luxury"]}
 
@@ -89,7 +90,10 @@ def create_trip(trip_request: TripRequest):
         travel_month=trip_request.travel_month,
         travel_season=get_travel_season(trip_request.travel_month),
         recommended_places=recommended_places,
+        ai_recommendation=None
     )
+    ai_recommendation = generate_ai_recommendation(trip)
+    trip.ai_recommendation = ai_recommendation
 
     db = SessionLocal()
     db.add(trip)
@@ -98,6 +102,27 @@ def create_trip(trip_request: TripRequest):
     db.close()
 
     return trip
+
+@app.post("/api/v1/trips/{id}/generate")
+def generate_trip_recommendation(id: int):
+    db = SessionLocal()
+    trip = db.query(Trip).filter(Trip.id == id).first()
+
+    if trip is None:
+        raise HTTPException (status_code=404, detail=f"Trip with id {id} not found")
+    
+    recommendation = generate_ai_recommendation(trip)
+    trip.ai_recommendation = recommendation
+
+    db.commit()
+    db.refresh(trip)
+    db.close()
+
+    return {
+        "trip_id": trip.id,
+        "destination": trip.destination,
+        "ai_recommendation": recommendation
+    }
 
 @app.delete("/api/v1/trips/{trip_id}/")
 def delete_trip(trip_id: int):
