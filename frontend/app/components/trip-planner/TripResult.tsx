@@ -1,4 +1,5 @@
 import type { Trip } from "../../lib/api";
+import { getTravelStyle } from "../../lib/travelStyle";
 import ItineraryText from "./ItineraryText";
 import Card from "../shared/Card";
 import TypingDots from "../shared/TypingDots";
@@ -19,7 +20,7 @@ type TripResultProps = {
 export default function TripResult({ trip, isRegeneratingItinerary = false }: TripResultProps) {
   return (
     <Card className="w-full p-5 text-left shadow-sm sm:p-6">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
         <div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">Durasi</p>
           <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">{trip.days} hari</p>
@@ -39,6 +40,10 @@ export default function TripResult({ trip, isRegeneratingItinerary = false }: Tr
         <div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">Musim</p>
           <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">{trip.travel_season}</p>
+        </div>
+        <div>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">Gaya Trip</p>
+          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">{getTravelStyle(trip.travel_style)}</p>
         </div>
       </div>
 

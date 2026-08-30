@@ -16,6 +16,7 @@ class Trip (Base) :
     travel_season       = Column(String, nullable=False)
     recommended_places  = Column(JSON, nullable=True)
     ai_recommendation   = Column(Text, nullable=True)
+    travel_style        = Column(Text, nullable=True)
 
     created_at = Column(
         DateTime(timezone=True),

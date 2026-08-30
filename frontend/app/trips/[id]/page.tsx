@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import { deleteTrip, getTrip, regenerateRecommendation, updateTripBudget, type Trip } from "../../lib/api";
 import { getCategoryTheme } from "../../lib/categoryTheme";
 import TripResult from "../../components/trip-planner/TripResult";
 import Card from "../../components/shared/Card";
 import Button from "../../components/shared/Button";
 import ErrorBanner from "../../components/shared/ErrorBanner";
+import BackLink from "../../components/shared/BackLink";
 
 type State =
   | { status: "loading" }
@@ -93,9 +93,7 @@ export default function TripDetailPage() {
   if (state.status === "error") {
     return (
       <div className="mx-auto w-full max-w-3xl px-6 py-12">
-        <Link href="/trips" className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">
-          ← Kembali ke Trip Saya
-        </Link>
+        <BackLink href="/trips">Kembali ke Trip Saya</BackLink>
         <div className="mt-6">
           <ErrorBanner>{state.message}</ErrorBanner>
         </div>
@@ -110,9 +108,9 @@ export default function TripDetailPage() {
     <div className="flex flex-1 flex-col">
       <div className={`bg-gradient-to-br ${theme.gradient} px-6 py-10 text-white sm:py-14`}>
         <div className="mx-auto w-full max-w-3xl">
-          <Link href="/trips" className="text-sm font-medium text-white/80 transition-colors hover:text-white">
-            ← Kembali ke Trip Saya
-          </Link>
+          <BackLink href="/trips" onDark>
+            Kembali ke Trip Saya
+          </BackLink>
 
           <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
             <div>

@@ -28,6 +28,7 @@ class TripRequest(BaseModel):
     budget: float
     currency: str
     travel_month: str
+    travel_style: str = "Solo"
 
 class UpdateTripRequest(BaseModel):
     budget: float
@@ -99,7 +100,8 @@ def create_trip(trip_request: TripRequest):
         travel_month=trip_request.travel_month,
         travel_season=get_travel_season(trip_request.travel_month),
         recommended_places=recommended_places,
-        ai_recommendation=None
+        ai_recommendation=None,
+        travel_style=trip_request.travel_style
     )
     ai_recommendation = generate_ai_recommendation(trip)
     trip.ai_recommendation = ai_recommendation

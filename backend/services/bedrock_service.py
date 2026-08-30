@@ -20,6 +20,7 @@ TRAVEL_PLANNER_PROMPT = (
     - Total Budget: {budget} {currency}
     - Daily Budget: {daily_budget} {currency}
     - Travel Category/Style: {category}
+    - Traveler Type: {travel_style}
 
     [INSTRUCTIONS]
     Design a day-by-day structured daily plan for the entire {duration}-day trip. For EVERY single day, you must break down the schedule into exactly three periods, adhering strictly to these requirements:
@@ -39,6 +40,7 @@ TRAVEL_PLANNER_PROMPT = (
     [CONSTRAINTS]
     - Geography: Ensure activities on the same day are geographically close. Minimize transit time.
     - Budget: Do not recommend luxury experiences if the budget is "backpacker/budget", and vice versa. Keep daily expenses near the {daily_budget} {currency} limit.
+    - Traveler Type: Tailor activity choices to a {travel_style} traveler (e.g., kid-friendly pacing for Family, romantic settings for Couple, flexible/social spots for Solo).
     - Specificity: NO generic advice (e.g., "visit a museum"). Name the actual museum, restaurant, or landmark (e.g., "Visit the Uffizi Gallery").
 
     [FORMAT]
@@ -90,7 +92,8 @@ def generate_ai_recommendation(trip):
         budget=trip.budget,
         currency=trip.currency,
         category=trip.category,
-        daily_budget=trip.daily_budget
+        daily_budget=trip.daily_budget,
+        travel_style=trip.travel_style or "Solo"
     )
 
     client = get_bedrock_client()

@@ -1,5 +1,6 @@
 import type { Trip } from "../../lib/api";
 import { getCategoryTheme } from "../../lib/categoryTheme";
+import { getTravelStyle, getTravelStyleIcon } from "../../lib/travelStyle";
 import Card from "../shared/Card";
 import Button from "../shared/Button";
 
@@ -23,6 +24,7 @@ type TripCardProps = {
 
 export default function TripCard({ trip, onDelete, isDeleting }: TripCardProps) {
   const theme = getCategoryTheme(trip.category);
+  const travelStyle = getTravelStyle(trip.travel_style);
 
   return (
     <Card className="flex flex-col p-5 shadow-sm">
@@ -31,9 +33,14 @@ export default function TripCard({ trip, onDelete, isDeleting }: TripCardProps) 
           <p className="text-xs text-zinc-500 dark:text-zinc-400">{formatDate(trip.created_at)}</p>
           <h3 className="mt-0.5 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{trip.destination}</h3>
         </div>
-        <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${theme.badge}`}>
-          {theme.icon} {trip.category}
-        </span>
+        <div className="flex shrink-0 flex-col items-end gap-1.5">
+          <span className={`rounded-full px-3 py-1 text-xs font-semibold ${theme.badge}`}>
+            {theme.icon} {trip.category}
+          </span>
+          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            {getTravelStyleIcon(travelStyle)} {travelStyle}
+          </span>
+        </div>
       </div>
 
       <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">

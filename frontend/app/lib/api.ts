@@ -4,9 +4,10 @@ export type TripRequest = {
   budget: number;
   currency: string;
   travel_month: string;
+  travel_style: string;
 };
 
-export type Trip = TripRequest & {
+export type Trip = Omit<TripRequest, "travel_style"> & {
   id: number;
   category: string;
   daily_budget: number;
@@ -15,6 +16,8 @@ export type Trip = TripRequest & {
   recommended_places: string[];
   ai_recommendation: string | null;
   created_at: string;
+  // data lama belum punya kolom ini, bisa null
+  travel_style: string | null;
 };
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
