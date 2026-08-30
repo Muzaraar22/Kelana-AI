@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from database import init_db, SessionLocal
 from models.trip import Trip
 from services.bedrock_service import generate_ai_recommendation
@@ -14,6 +15,13 @@ from services.trip_service import (
 
 app = FastAPI()
 init_db()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 class TripRequest(BaseModel):
     destination: str
     days: int
@@ -79,14 +87,15 @@ def create_trip(trip_request: TripRequest):
             for place in get_recommended_places(dest.strip()):
                 recommended_places.append(place)
 
+    category = get_trip_category(trip_request.budget, trip_request.currency)
     trip = Trip (
         destination=trip_request.destination,
         days=trip_request.days,
         budget=trip_request.budget,
         currency=trip_request.currency,
-        category=get_trip_category(trip_request.budget),
+        category=category,
         daily_budget=calculate_daily_budget(trip_request.budget, trip_request.days),
-        transportation_recommendation=get_transportation_recommendation(get_trip_category(trip_request.budget)),
+        transportation_recommendation=get_transportation_recommendation(category),
         travel_month=trip_request.travel_month,
         travel_season=get_travel_season(trip_request.travel_month),
         recommended_places=recommended_places,
@@ -145,7 +154,7 @@ def update_trip(trip_id: int, trip_request: UpdateTripRequest):
         raise HTTPException(status_code=404, detail=f"Trip with id {trip_id} not found")
 
     trip.budget = trip_request.budget
-    trip.category = get_trip_category(trip_request.budget)
+    trip.category = get_trip_category(trip_request.budget, trip.currency)
     trip.daily_budget = calculate_daily_budget(trip_request.budget, trip.days)
     trip.transportation_recommendation = get_transportation_recommendation(trip.category)
 

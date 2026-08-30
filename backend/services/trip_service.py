@@ -2,10 +2,28 @@ def calculate_daily_budget(budget: float, days: int) -> float:
     return budget / days
 
 
-def get_trip_category(budget: float) -> str:
-    if budget < 1000:
+# kurs perkiraan ke USD (1 unit mata uang asal = sekian USD)
+USD_EXCHANGE_RATES = {
+    "USD": 1,
+    "IDR": 1 / 15800,
+    "EUR": 1.08,
+    "GBP": 1.27,
+    "JPY": 1 / 150,
+    "SGD": 1 / 1.34,
+    "MYR": 1 / 4.7,
+}
+
+
+def convert_to_usd(amount: float, currency: str) -> float:
+    rate = USD_EXCHANGE_RATES.get(currency.upper(), 1)
+    return amount * rate
+
+
+def get_trip_category(budget: float, currency: str = "USD") -> str:
+    budget_usd = convert_to_usd(budget, currency)
+    if budget_usd < 1000:
         return "Backpacker"
-    elif budget <= 3000:
+    elif budget_usd <= 3000:
         return "Standard"
     else:
         return "Luxury"
