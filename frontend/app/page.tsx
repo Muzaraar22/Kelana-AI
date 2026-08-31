@@ -16,7 +16,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
 
         <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-6 py-20 text-center">
-          <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          <h1 className="max-w-2xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             Rencanakan Perjalanan Impianmu, Ditemani AI
           </h1>
           <p className="mt-4 max-w-xl text-base text-zinc-200 sm:text-lg">

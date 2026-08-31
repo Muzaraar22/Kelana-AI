@@ -9,6 +9,7 @@ import Card from "../../components/shared/Card";
 import Button from "../../components/shared/Button";
 import ErrorBanner from "../../components/shared/ErrorBanner";
 import BackLink from "../../components/shared/BackLink";
+import Icon from "../../components/shared/Icon";
 
 type State =
   | { status: "loading" }
@@ -114,12 +115,13 @@ export default function TripDetailPage() {
 
           <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-sm text-white/70">Rencana trip ke</p>
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{trip.destination}</h1>
-              <p className="mt-1 text-sm text-white/70">Dibuat {formatDate(trip.created_at)}</p>
+              <p className="text-sm text-white/60">Rencana trip ke</p>
+              <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{trip.destination}</h1>
+              <p className="mt-1 text-sm text-white/60">Dibuat {formatDate(trip.created_at)}</p>
             </div>
-            <span className="rounded-full bg-white/15 px-4 py-1.5 text-sm font-semibold backdrop-blur">
-              {theme.icon} {trip.category}
+            <span className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium backdrop-blur ${theme.heroBadge}`}>
+              <Icon name={theme.iconName} className="h-4 w-4" />
+              {trip.category}
             </span>
           </div>
         </div>

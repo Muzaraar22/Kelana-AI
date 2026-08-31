@@ -1,13 +1,14 @@
 export const TRAVEL_STYLES = ["Solo", "Couple", "Family"] as const;
 
-const ICONS: Record<string, string> = {
-  Solo: "🧍",
-  Couple: "💑",
-  Family: "👨‍👩‍👧",
+// nama icon di komponen shared/Icon
+const ICON_NAMES: Record<string, string> = {
+  Solo: "user",
+  Couple: "heart",
+  Family: "users",
 };
 
-export function getTravelStyleIcon(style: string): string {
-  return ICONS[style] ?? "🧭";
+export function getTravelStyleIconName(style: string): string {
+  return ICON_NAMES[style] ?? "user";
 }
 
 // data lama belum punya travel_style -> default ke Solo

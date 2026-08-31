@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "../shared/Logo";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -8,11 +9,8 @@ export default function Footer() {
       <div className="mx-auto w-full max-w-6xl px-6 py-10">
         <div className="flex flex-col gap-8 sm:flex-row sm:justify-between">
           <div className="max-w-xs">
-            <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-sm text-white">
-                K
-              </span>
-              KelanaAI
+            <Link href="/" aria-label="KelanaAI beranda">
+              <Logo />
             </Link>
             <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
               Rencanakan perjalananmu lebih mudah dengan rekomendasi trip berbasis AI.

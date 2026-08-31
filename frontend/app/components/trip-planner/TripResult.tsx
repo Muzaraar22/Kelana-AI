@@ -1,8 +1,10 @@
 import type { Trip } from "../../lib/api";
+import { getCategoryTheme } from "../../lib/categoryTheme";
 import { getTravelStyle } from "../../lib/travelStyle";
 import ItineraryText from "./ItineraryText";
 import Card from "../shared/Card";
 import TypingDots from "../shared/TypingDots";
+import Icon from "../shared/Icon";
 
 function formatMoney(amount: number, currency: string) {
   try {
@@ -18,8 +20,11 @@ type TripResultProps = {
 };
 
 export default function TripResult({ trip, isRegeneratingItinerary = false }: TripResultProps) {
+  const theme = getCategoryTheme(trip.category);
+
   return (
-    <Card className="w-full p-5 text-left shadow-sm sm:p-6">
+    <Card className="relative w-full overflow-hidden p-5 pl-6 text-left shadow-sm sm:p-6 sm:pl-7">
+      <span className={`absolute inset-y-0 left-0 w-1.5 ${theme.accentBar}`} aria-hidden="true" />
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
         <div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">Durasi</p>
@@ -49,15 +54,17 @@ export default function TripResult({ trip, isRegeneratingItinerary = false }: Tr
 
       {trip.recommended_places.length > 0 && (
         <div className="mt-5 border-t border-zinc-100 pt-4 dark:border-zinc-800">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <Icon name="map-pin" className="h-3.5 w-3.5" />
             Rekomendasi Tempat
           </p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-2.5 flex flex-wrap gap-2">
             {trip.recommended_places.map((place) => (
               <span
                 key={place}
-                className="rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:text-zinc-300"
               >
+                <Icon name="map-pin" className="h-3 w-3 text-zinc-400" />
                 {place}
               </span>
             ))}
@@ -67,7 +74,8 @@ export default function TripResult({ trip, isRegeneratingItinerary = false }: Tr
 
       {(trip.ai_recommendation || isRegeneratingItinerary) && (
         <div className="mt-5 border-t border-zinc-100 pt-4 dark:border-zinc-800">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <Icon name="sparkles" className="h-3.5 w-3.5" />
             Itinerary dari KelanaAI
           </p>
           <div className="mt-2">

@@ -8,6 +8,7 @@ import TripCard from "../components/trips/TripCard";
 import Button from "../components/shared/Button";
 import ErrorBanner from "../components/shared/ErrorBanner";
 import Pagination from "../components/shared/Pagination";
+import Icon from "../components/shared/Icon";
 
 type State =
   | { status: "loading" }
@@ -84,7 +85,7 @@ export default function TripsPage() {
     <div className="mx-auto w-full max-w-6xl px-6 py-12">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
             Trip Saya
           </h1>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
@@ -92,7 +93,8 @@ export default function TripsPage() {
           </p>
         </div>
         <Button href="/#destinasi" pill>
-          + Rencanakan Trip Baru
+          <Icon name="plus" className="h-4 w-4" />
+          Rencanakan Trip Baru
         </Button>
       </div>
 

@@ -1,8 +1,9 @@
 import type { Trip } from "../../lib/api";
 import { getCategoryTheme } from "../../lib/categoryTheme";
-import { getTravelStyle, getTravelStyleIcon } from "../../lib/travelStyle";
+import { getTravelStyle, getTravelStyleIconName } from "../../lib/travelStyle";
 import Card from "../shared/Card";
 import Button from "../shared/Button";
+import Icon from "../shared/Icon";
 
 function formatMoney(amount: number, currency: string) {
   try {
@@ -27,18 +28,21 @@ export default function TripCard({ trip, onDelete, isDeleting }: TripCardProps) 
   const travelStyle = getTravelStyle(trip.travel_style);
 
   return (
-    <Card className="flex flex-col p-5 shadow-sm">
+    <Card className="relative flex flex-col overflow-hidden p-5 pl-6 shadow-sm">
+      <span className={`absolute inset-y-0 left-0 w-1.5 ${theme.accentBar}`} aria-hidden="true" />
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">{formatDate(trip.created_at)}</p>
-          <h3 className="mt-0.5 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{trip.destination}</h3>
+          <h3 className="mt-0.5 font-display text-lg font-semibold text-zinc-900 dark:text-zinc-50">{trip.destination}</h3>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1.5">
-          <span className={`rounded-full px-3 py-1 text-xs font-semibold ${theme.badge}`}>
-            {theme.icon} {trip.category}
+          <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${theme.badge}`}>
+            <Icon name={theme.iconName} className="h-3.5 w-3.5" />
+            {trip.category}
           </span>
-          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-            {getTravelStyleIcon(travelStyle)} {travelStyle}
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            <Icon name={getTravelStyleIconName(travelStyle)} className="h-3.5 w-3.5" />
+            {travelStyle}
           </span>
         </div>
       </div>
