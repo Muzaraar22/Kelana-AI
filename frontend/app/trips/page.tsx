@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { deleteTrip, listTrips, type Trip } from "../lib/api";
+import { ApiError, deleteTrip, listTrips, type Trip } from "../lib/api";
 import { getTravelStyle } from "../lib/travelStyle";
 import TripCard from "../components/trips/TripCard";
 import Button from "../components/shared/Button";
@@ -74,8 +74,12 @@ export default function TripsPage() {
       setState((prev) =>
         prev.status === "loaded" ? { status: "loaded", trips: prev.trips.filter((t) => t.id !== id) } : prev
       );
-    } catch {
-      alert("Gagal menghapus trip. Coba lagi.");
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 403) {
+        alert("Trip ini bukan milikmu.");
+      } else if (!(err instanceof ApiError && err.status === 401)) {
+        alert("Gagal menghapus trip. Coba lagi.");
+      }
     } finally {
       setDeletingId(null);
     }

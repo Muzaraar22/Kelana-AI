@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { deleteTrip, getTrip, regenerateRecommendation, updateTripBudget, type Trip } from "../../lib/api";
+import { ApiError, deleteTrip, getTrip, regenerateRecommendation, updateTripBudget, type Trip } from "../../lib/api";
 import { getCategoryTheme } from "../../lib/categoryTheme";
 import TripResult from "../../components/trip-planner/TripResult";
 import Card from "../../components/shared/Card";
@@ -37,9 +37,14 @@ export default function TripDetailPage() {
         setState({ status: "loaded", trip });
         setBudgetInput(String(trip.budget));
       })
-      .catch(() =>
-        setState({ status: "error", message: "Trip tidak ditemukan atau gagal dimuat." })
-      );
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) return; // provider redirects
+        const message =
+          err instanceof ApiError && err.status === 403
+            ? "Trip ini bukan milikmu."
+            : "Trip tidak ditemukan atau gagal dimuat.";
+        setState({ status: "error", message });
+      });
   }, [tripId]);
 
   async function handleUpdateBudget(e: React.FormEvent<HTMLFormElement>) {
@@ -62,8 +67,12 @@ export default function TripDetailPage() {
       setIsRegenerating(true);
       const { ai_recommendation } = await regenerateRecommendation(tripId);
       setState({ status: "loaded", trip: { ...updatedTrip, ai_recommendation } });
-    } catch {
-      alert("Gagal memperbarui budget. Coba lagi.");
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 403) {
+        alert("Kamu tidak punya akses untuk mengubah trip ini.");
+      } else if (!(err instanceof ApiError && err.status === 401)) {
+        alert("Gagal memperbarui budget. Coba lagi.");
+      }
     } finally {
       setIsSaving(false);
       setIsRegenerating(false);
@@ -77,8 +86,12 @@ export default function TripDetailPage() {
     try {
       await deleteTrip(tripId);
       router.push("/trips");
-    } catch {
-      alert("Gagal menghapus trip. Coba lagi.");
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 403) {
+        alert("Kamu tidak punya akses untuk menghapus trip ini.");
+      } else if (!(err instanceof ApiError && err.status === 401)) {
+        alert("Gagal menghapus trip. Coba lagi.");
+      }
       setIsDeleting(false);
     }
   }

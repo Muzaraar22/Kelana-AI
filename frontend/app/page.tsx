@@ -1,8 +1,12 @@
 import Image from "next/image";
 import TripPlanner from "./components/trip-planner/TripPlanner";
 import TripCategories from "./components/home/TripCategories";
+import LoggedOutCta from "./components/trip-planner/LoggedOutCta";
+import { getSession } from "./lib/session";
 
-export default function Home() {
+export default async function Home() {
+  const user = await getSession();
+
   return (
     <div className="flex flex-1 flex-col">
       <section id="destinasi" className="relative flex min-h-[560px] w-full scroll-mt-16 items-center justify-center overflow-hidden sm:min-h-[640px]">
@@ -25,7 +29,7 @@ export default function Home() {
           </p>
 
           <div className="mt-10 w-full max-w-3xl">
-            <TripPlanner />
+            {user ? <TripPlanner /> : <LoggedOutCta />}
           </div>
         </div>
       </section>
