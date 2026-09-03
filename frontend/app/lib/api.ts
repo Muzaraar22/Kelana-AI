@@ -129,3 +129,19 @@ export function regenerateRecommendation(
 ): Promise<{ trip_id: number; destination: string; ai_recommendation: string }> {
   return request(`${BFF}/api/v1/trips/${id}/generate`, { method: "POST" });
 }
+
+// ----------------------------- assistant ----------------------------
+export type AssistantAnswer = {
+  question: string;
+  answer: string;
+  sources: string[];
+};
+
+// one-shot: the backend keeps no conversation state and persists nothing.
+// the chat history lives only in React state on /assistant.
+export function askAssistant(question: string): Promise<AssistantAnswer> {
+  return request<AssistantAnswer>(`${BFF}/api/v1/ask`, {
+    method: "POST",
+    body: JSON.stringify({ question }),
+  });
+}

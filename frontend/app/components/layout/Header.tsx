@@ -29,6 +29,9 @@ export default function Header() {
               <Link href="/trips" className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
                 Trip Saya
               </Link>
+              <Link href="/assistant" className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
+                Asisten
+              </Link>
               <Link href="/profile" className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
                 Profil
               </Link>
@@ -77,6 +80,9 @@ export default function Header() {
               <>
                 <Link href="/trips" onClick={close} className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
                   Trip Saya
+                </Link>
+                <Link href="/assistant" onClick={close} className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
+                  Asisten
                 </Link>
                 <Link href="/profile" onClick={close} className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
                   Profil

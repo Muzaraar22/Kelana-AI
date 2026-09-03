@@ -1,10 +1,12 @@
 import re
+import traceback
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from services.kb_service import ask_knowledge_base
 
 from database import init_db
 from models.user import User
@@ -139,7 +141,6 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 def me(current_user: User = Depends(get_current_user)):
     return current_user
 
-
 @app.get("/api/v1/trips")
 def list_trips(
     db: Session = Depends(get_db),
@@ -249,3 +250,35 @@ def update_trip(
     db.refresh(trip)
 
     return trip
+
+class QuestionRequest(BaseModel):
+    question: str = Field(min_length=3, max_length=500)
+
+
+@app.post("/api/v1/ask")
+def ask_assistant(
+    request: QuestionRequest,
+    user: User = Depends(get_current_user),
+):
+    """Answer a travel question grounded in the knowledge base.
+
+    One-shot: no conversation state is kept between calls and nothing is
+    persisted (the DB is never touched) — the frontend "Asisten" chat keeps the
+    history in memory only, so it is gone on logout / refresh. Requires a session
+    like every other non-auth endpoint. Every call is a real, billed AWS request
+    (a KB Retrieve plus a Bedrock converse).
+    """
+    question = request.question.strip()
+    try:
+        result = ask_knowledge_base(question)
+    except RuntimeError as exc:
+        # missing KNOWLEDGE_BASE_ID / config problem
+        raise HTTPException(500, str(exc))
+    except Exception as exc:
+        # print the real cause to the uvicorn console...
+        traceback.print_exc()
+        # ...and echo it back so it shows up in the frontend error bubble too.
+        # (tighten this to a generic message before going to production)
+        raise HTTPException(502, f"{type(exc).__name__}: {exc}")
+
+    return {"question": question, **result}

@@ -6,7 +6,7 @@ import { AUTH_COOKIE } from "./app/lib/authConstants";
 // Real validation happens in the backend dependency + getSession(); an expired
 // cookie still 401s on the data call and the AuthProvider handles it.
 export const config = {
-  matcher: ["/trips/:path*", "/profile/:path*", "/login", "/register"],
+  matcher: ["/trips/:path*", "/profile/:path*", "/assistant/:path*", "/login", "/register"],
 };
 
 export function proxy(request: NextRequest) {
