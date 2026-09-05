@@ -131,17 +131,57 @@ export function regenerateRecommendation(
 }
 
 // ----------------------------- assistant ----------------------------
-export type AssistantAnswer = {
-  question: string;
-  answer: string;
-  sources: string[];
+// Persisted, multi-conversation chat: history lives in Postgres (conversations
+// + messages tables), fetched on demand — nothing is kept only in React state.
+export type ChatMessage = {
+  id: number;
+  role: "user" | "assistant";
+  content: string;
+  sources: string[] | null;
+  created_at: string;
 };
 
-// one-shot: the backend keeps no conversation state and persists nothing.
-// the chat history lives only in React state on /assistant.
-export function askAssistant(question: string): Promise<AssistantAnswer> {
-  return request<AssistantAnswer>(`${BFF}/api/v1/ask`, {
+export type ConversationSummary = {
+  id: number;
+  title: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ConversationDetail = ConversationSummary & {
+  messages: ChatMessage[];
+};
+
+export type AskResponse = {
+  conversation_id: number;
+  conversation_title: string;
+  user_message: ChatMessage;
+  assistant_message: ChatMessage;
+};
+
+export function listConversations(): Promise<ConversationSummary[]> {
+  return request<ConversationSummary[]>(`${BFF}/api/v1/conversations`);
+}
+
+export function getConversation(id: number): Promise<ConversationDetail> {
+  return request<ConversationDetail>(`${BFF}/api/v1/conversations/${id}`);
+}
+
+export function renameConversation(id: number, title: string): Promise<ConversationSummary> {
+  return request<ConversationSummary>(`${BFF}/api/v1/conversations/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ title }),
+  });
+}
+
+export async function deleteConversation(id: number): Promise<void> {
+  await request<{ message: string }>(`${BFF}/api/v1/conversations/${id}/`, { method: "DELETE" });
+}
+
+// conversationId null -> backend creates a new conversation and returns its id
+export function sendMessage(question: string, conversationId: number | null): Promise<AskResponse> {
+  return request<AskResponse>(`${BFF}/api/v1/ask`, {
     method: "POST",
-    body: JSON.stringify({ question }),
+    body: JSON.stringify({ question, conversation_id: conversationId }),
   });
 }

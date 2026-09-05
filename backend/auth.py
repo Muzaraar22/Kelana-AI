@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 from database import SessionLocal
 from models.user import User
 from models.trip import Trip
+from models.conversation import Conversation
 
 load_dotenv()
 
@@ -93,3 +94,13 @@ def get_owned_trip(trip_id: int, db: Session, current_user: User) -> Trip:
     if trip.user_id != current_user.id:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "This trip belongs to another user")
     return trip
+
+
+def get_owned_conversation(conversation_id: int, db: Session, current_user: User) -> Conversation:
+    """Load a conversation and enforce ownership: 404 if missing, 403 if it's someone else's."""
+    conversation = db.query(Conversation).filter(Conversation.id == conversation_id).first()
+    if conversation is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Conversation with id {conversation_id} not found")
+    if conversation.user_id != current_user.id:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "This conversation belongs to another user")
+    return conversation

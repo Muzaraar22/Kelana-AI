@@ -8,7 +8,9 @@ Two steps per question, both real billed AWS calls:
   2. ...then feed those passages to the same bearer-token `bedrock-runtime`
      `converse` client used for itineraries and let the model write the answer.
 
-Nothing is persisted — each call re-retrieves and re-generates from scratch.
+This module itself is DB-free and stateless — each call re-retrieves and
+re-generates from scratch; conversation persistence and history-trimming live
+in main.py, which passes prior turns in via the `history` argument below.
 """
 
 import os
@@ -79,8 +81,16 @@ def _retrieve(question: str) -> list[dict]:
     return passages
 
 
-def ask_knowledge_base(question: str) -> dict:
-    """Retrieve → generate. Returns {"answer": str, "sources": list[str]}."""
+def ask_knowledge_base(question: str, history: list[dict] | None = None) -> dict:
+    """Retrieve → generate. Returns {"answer": str, "sources": list[str]}.
+
+    `history` is an optional list of {"role": "user"|"assistant", "content": str}
+    turns, oldest first, already trimmed and alternation-sanitised by the caller
+    (this function stays DB-free — it never queries anything itself, same as
+    bedrock_service.generate_ai_recommendation() takes a plain object). Prior
+    turns are replayed verbatim so the model has real dialogue context; freshly
+    retrieved KB passages are injected only into the current/latest question.
+    """
     passages = _retrieve(question)
 
     if not passages:
@@ -96,23 +106,29 @@ def ask_knowledge_base(question: str) -> dict:
         f"[Reference {i + 1}]\n{p['text']}" for i, p in enumerate(passages)
     )
 
+    messages = [
+        {"role": turn["role"], "content": [{"text": turn["content"]}]}
+        for turn in (history or [])
+    ]
+    messages.append(
+        {
+            "role": "user",
+            "content": [
+                {
+                    "text": (
+                        f"Reference material:\n{context}\n\n"
+                        f"Traveller question: {question}"
+                    )
+                }
+            ],
+        }
+    )
+
     client = get_bedrock_client()
     response = client.converse(
         modelId=os.getenv("MODEL_ID", "amazon.nova-lite-v1:0"),
         system=[{"text": _SYSTEM_PROMPT}],
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "text": (
-                            f"Reference material:\n{context}\n\n"
-                            f"Traveller question: {question}"
-                        )
-                    }
-                ],
-            }
-        ],
+        messages=messages,
         inferenceConfig={
             "maxTokens": MAX_OUTPUT_TOKENS,
             "temperature": TEMPERATURE,

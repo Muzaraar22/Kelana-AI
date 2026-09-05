@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "../lib/session";
-import AssistantChat from "../components/assistant/AssistantChat";
+import AssistantWorkspace from "../components/assistant/AssistantWorkspace";
 import Icon from "../components/shared/Icon";
 
 export const metadata: Metadata = {
@@ -14,8 +14,8 @@ export default async function AssistantPage() {
   if (!user) redirect("/login?next=/assistant");
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-6 py-8">
-      <div className="flex items-center gap-3">
+    <div className="mx-auto flex h-[calc(100vh-4rem)] min-h-[600px] w-full max-w-6xl flex-col px-6 py-6">
+      <div className="mb-4 flex items-center gap-3">
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
           <Icon name="sparkles" className="h-5 w-5" />
         </span>
@@ -29,9 +29,7 @@ export default async function AssistantPage() {
         </div>
       </div>
 
-      <div className="mt-6 flex min-h-0 flex-1 flex-col">
-        <AssistantChat />
-      </div>
+      <AssistantWorkspace />
     </div>
   );
 }
