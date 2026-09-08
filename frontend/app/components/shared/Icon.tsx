@@ -24,6 +24,8 @@ const PATHS: Record<string, string> = {
   pencil: "M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z",
   trash: "M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6h16Z",
   "message-circle": "M21 12a8.5 8.5 0 0 1-8.5 8.5c-1.3 0-2.5-.3-3.6-.8L3 21l1.4-4.2A8.5 8.5 0 1 1 21 12Z",
+  "panel-left": "M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5ZM10 4v16",
+  x: "M6 6l12 12M18 6L6 18",
 };
 
 type IconProps = SVGProps<SVGSVGElement> & {

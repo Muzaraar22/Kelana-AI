@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
+import SiteFooter from "./components/layout/SiteFooter";
 import { Providers } from "./providers";
 import { getSession } from "./lib/session";
 
@@ -36,7 +36,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Providers initialUser={user}>
           <Header />
           <main className="flex flex-1 flex-col">{children}</main>
-          <Footer />
+          <SiteFooter />
         </Providers>
       </body>
     </html>

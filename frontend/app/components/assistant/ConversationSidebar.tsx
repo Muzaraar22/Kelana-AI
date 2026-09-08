@@ -12,6 +12,8 @@ type ConversationSidebarProps = {
   onNewChat: () => void;
   onRenamed: (id: number, title: string) => void;
   onDeleted: (id: number) => void;
+  // present in the mobile drawer; the close button is hidden at >= sm anyway
+  onClose?: () => void;
 };
 
 export default function ConversationSidebar({
@@ -22,6 +24,7 @@ export default function ConversationSidebar({
   onNewChat,
   onRenamed,
   onDeleted,
+  onClose,
 }: ConversationSidebarProps) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [draftTitle, setDraftTitle] = useState("");
@@ -58,16 +61,26 @@ export default function ConversationSidebar({
   }
 
   return (
-    <aside className="flex max-h-56 w-full shrink-0 flex-col rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-none sm:w-64">
-      <div className="border-b border-zinc-100 p-3 dark:border-zinc-800">
+    <aside className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900 sm:shadow-none">
+      <div className="flex items-center gap-2 border-b border-zinc-100 p-3 dark:border-zinc-800">
         <button
           type="button"
           onClick={onNewChat}
-          className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
         >
           <Icon name="plus" className="h-4 w-4" />
           Chat baru
         </button>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Tutup daftar percakapan"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 sm:hidden"
+          >
+            <Icon name="x" className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto p-2">

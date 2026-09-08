@@ -14,6 +14,7 @@ type DisplayMessage = ChatMessage | { id: number; role: "error"; text: string };
 type AssistantChatProps = {
   conversationId: number | null;
   conversationTitle: string | null;
+  onOpenSidebar?: () => void;
   onConversationCreated: (id: number, title: string) => void;
   onConversationTouched: (id: number) => void;
 };
@@ -39,6 +40,7 @@ function sourceLabel(source: string): string {
 export default function AssistantChat({
   conversationId,
   conversationTitle,
+  onOpenSidebar,
   onConversationCreated,
   onConversationTouched,
 }: AssistantChatProps) {
@@ -148,7 +150,17 @@ export default function AssistantChat({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="mb-3 flex items-center justify-between border-b border-zinc-100 pb-3 dark:border-zinc-800">
+      <div className="mb-3 flex items-center gap-2 border-b border-zinc-100 pb-3 dark:border-zinc-800">
+        {onOpenSidebar && (
+          <button
+            type="button"
+            onClick={onOpenSidebar}
+            aria-label="Buka daftar percakapan"
+            className="-ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 sm:hidden"
+          >
+            <Icon name="panel-left" className="h-4 w-4" />
+          </button>
+        )}
         <h2 className="truncate text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           {conversationTitle ?? "Percakapan baru"}
         </h2>
