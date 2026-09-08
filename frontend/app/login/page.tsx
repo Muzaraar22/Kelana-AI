@@ -9,6 +9,7 @@ import Card from "../components/shared/Card";
 import Button from "../components/shared/Button";
 import Spinner from "../components/shared/Spinner";
 import ErrorBanner from "../components/shared/ErrorBanner";
+import PasswordInput from "../components/shared/PasswordInput";
 
 const inputClass =
   "rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2.5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50";
@@ -61,7 +62,7 @@ function LoginForm() {
 
         <label className="flex flex-col gap-1.5">
           <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Password</span>
-          <input type="password" name="password" required autoComplete="current-password" placeholder="••••••••" className={inputClass} />
+          <PasswordInput name="password" required autoComplete="current-password" placeholder="••••••••" />
         </label>
 
         {error && <ErrorBanner>{error}</ErrorBanner>}
