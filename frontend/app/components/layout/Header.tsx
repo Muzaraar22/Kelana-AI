@@ -36,7 +36,7 @@ export default function Header() {
                 Profil
               </Link>
               <LogoutButton />
-              <Button href="/#destinasi" variant="secondary" size="sm" pill>
+              <Button href="/plan" variant="secondary" size="sm" pill>
                 Rencanakan Trip
               </Button>
             </>
@@ -88,7 +88,7 @@ export default function Header() {
                   Profil
                 </Link>
                 <LogoutButton className="self-start" onDone={close} />
-                <Button href="/#destinasi" variant="secondary" size="sm" pill onClick={close} className="self-start">
+                <Button href="/plan" variant="secondary" size="sm" pill onClick={close} className="self-start">
                   Rencanakan Trip
                 </Button>
               </>

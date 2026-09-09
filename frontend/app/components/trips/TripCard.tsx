@@ -1,17 +1,10 @@
 import type { Trip } from "../../lib/api";
 import { getCategoryTheme } from "../../lib/categoryTheme";
+import { formatMoney } from "../../lib/formatMoney";
 import { getTravelStyle, getTravelStyleIconName } from "../../lib/travelStyle";
 import Card from "../shared/Card";
 import Button from "../shared/Button";
 import Icon from "../shared/Icon";
-
-function formatMoney(amount: number, currency: string) {
-  try {
-    return new Intl.NumberFormat("id-ID", { style: "currency", currency, maximumFractionDigits: 0 }).format(amount);
-  } catch {
-    return `${amount.toLocaleString("id-ID")} ${currency}`;
-  }
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
@@ -28,8 +21,7 @@ export default function TripCard({ trip, onDelete, isDeleting }: TripCardProps) 
   const travelStyle = getTravelStyle(trip.travel_style);
 
   return (
-    <Card className="relative flex flex-col overflow-hidden p-5 pl-6 shadow-sm">
-      <span className={`absolute inset-y-0 left-0 w-1.5 ${theme.accentBar}`} aria-hidden="true" />
+    <Card className="flex flex-col p-5 shadow-sm">
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">{formatDate(trip.created_at)}</p>

@@ -3,14 +3,26 @@ def calculate_daily_budget(budget: float, days: int) -> float:
 
 
 # kurs perkiraan ke USD (1 unit mata uang asal = sekian USD)
+# angka perkiraan, bukan kurs real-time — cukup untuk menentukan kategori trip
 USD_EXCHANGE_RATES = {
-    "USD": 1,
     "IDR": 1 / 15800,
+    "USD": 1,
     "EUR": 1.08,
     "GBP": 1.27,
-    "JPY": 1 / 150,
     "SGD": 1 / 1.34,
     "MYR": 1 / 4.7,
+    "THB": 1 / 35,
+    "PHP": 1 / 57,
+    "VND": 1 / 25000,
+    "JPY": 1 / 150,
+    "CNY": 1 / 7.2,
+    "KRW": 1 / 1350,
+    "HKD": 1 / 7.8,
+    "INR": 1 / 83,
+    "AUD": 1 / 1.52,
+    "CAD": 1 / 1.36,
+    "CHF": 1.12,
+    "AED": 1 / 3.6725,
 }
 
 

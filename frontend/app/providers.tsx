@@ -49,12 +49,21 @@ export function Providers({
     router.refresh();
   }, [router]);
 
-  // a 401 from any data call means the cookie is dead → drop the user
+  // a 401 from any data call means the cookie is dead → drop the user AND
+  // clear the cookie (via the logout route) so the proxy stops bouncing us
+  // back onto protected routes, then send to login.
   useEffect(() => {
+    let handling = false;
     setUnauthorizedHandler(() => {
+      if (handling) return;
+      handling = true;
       setUser(null);
-      router.replace("/login");
-      router.refresh();
+      apiLogout()
+        .catch(() => {})
+        .finally(() => {
+          router.replace("/login");
+          router.refresh();
+        });
     });
     return () => setUnauthorizedHandler(null);
   }, [router]);

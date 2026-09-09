@@ -1,18 +1,10 @@
 import type { Trip } from "../../lib/api";
-import { getCategoryTheme } from "../../lib/categoryTheme";
+import { formatMoney } from "../../lib/formatMoney";
 import { getTravelStyle } from "../../lib/travelStyle";
 import ItineraryText from "./ItineraryText";
 import Card from "../shared/Card";
 import TypingDots from "../shared/TypingDots";
 import Icon from "../shared/Icon";
-
-function formatMoney(amount: number, currency: string) {
-  try {
-    return new Intl.NumberFormat("id-ID", { style: "currency", currency, maximumFractionDigits: 0 }).format(amount);
-  } catch {
-    return `${amount.toLocaleString("id-ID")} ${currency}`;
-  }
-}
 
 type TripResultProps = {
   trip: Trip;
@@ -20,11 +12,8 @@ type TripResultProps = {
 };
 
 export default function TripResult({ trip, isRegeneratingItinerary = false }: TripResultProps) {
-  const theme = getCategoryTheme(trip.category);
-
   return (
-    <Card className="relative w-full overflow-hidden p-5 pl-6 text-left shadow-sm sm:p-6 sm:pl-7">
-      <span className={`absolute inset-y-0 left-0 w-1.5 ${theme.accentBar}`} aria-hidden="true" />
+    <Card className="w-full p-5 text-left shadow-sm sm:p-6">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
         <div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">Durasi</p>

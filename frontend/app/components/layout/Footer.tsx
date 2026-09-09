@@ -22,8 +22,8 @@ export default function Footer() {
               <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Produk</h3>
               <ul className="mt-3 space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
                 <li>
-                  <Link href="/#destinasi" className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
-                    Cari Trip
+                  <Link href="/plan" className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
+                    Rencanakan Trip
                   </Link>
                 </li>
                 <li>

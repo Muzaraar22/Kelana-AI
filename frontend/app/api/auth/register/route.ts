@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { AUTH_COOKIE, AUTH_COOKIE_MAX_AGE } from "../../../lib/authConstants";
+import { jwtSecondsLeft } from "../../../lib/jwt";
 
 const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8000";
 
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
-    maxAge: AUTH_COOKIE_MAX_AGE,
+    maxAge: jwtSecondsLeft(data.access_token, AUTH_COOKIE_MAX_AGE),
   });
 
   return Response.json(data.user, { status: 201 });

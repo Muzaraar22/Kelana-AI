@@ -96,7 +96,7 @@ export default function TripsPage() {
             Semua rencana trip yang pernah kamu buat dengan KelanaAI.
           </p>
         </div>
-        <Button href="/#destinasi" pill>
+        <Button href="/plan" pill>
           <Icon name="plus" className="h-4 w-4" />
           Rencanakan Trip Baru
         </Button>
@@ -132,7 +132,7 @@ export default function TripsPage() {
       {state.status === "loaded" && state.trips.length === 0 && (
         <div className="mt-10 rounded-2xl border border-dashed border-zinc-300 p-10 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
           Belum ada trip yang dibuat.{" "}
-          <Link href="/#destinasi" className="font-medium text-emerald-600 hover:underline dark:text-emerald-400">
+          <Link href="/plan" className="font-medium text-emerald-600 hover:underline dark:text-emerald-400">
             Rencanakan trip pertamamu
           </Link>
           .

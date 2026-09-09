@@ -1,7 +1,7 @@
 import Image from "next/image";
-import TripPlanner from "./components/trip-planner/TripPlanner";
 import TripCategories from "./components/home/TripCategories";
 import LoggedOutCta from "./components/trip-planner/LoggedOutCta";
+import Button from "./components/shared/Button";
 import { getSession } from "./lib/session";
 
 export default async function Home() {
@@ -29,7 +29,13 @@ export default async function Home() {
           </p>
 
           <div className="mt-10 w-full max-w-3xl">
-            {user ? <TripPlanner /> : <LoggedOutCta />}
+            {user ? (
+              <Button href="/plan" className="sm:px-8">
+                Mulai Rencanakan Trip
+              </Button>
+            ) : (
+              <LoggedOutCta />
+            )}
           </div>
         </div>
       </section>

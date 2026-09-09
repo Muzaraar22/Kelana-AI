@@ -30,7 +30,8 @@ from services.trip_service import (
     get_travel_season,
     get_recommended_places,
     calculate_daily_budget,
-    recommendations
+    recommendations,
+    USD_EXCHANGE_RATES,
 )
 
 app = FastAPI()
@@ -107,6 +108,10 @@ def get_recommendations():
 def get_transportations():
     return {"transportations": ["Bus", "Train", "Flight"]}
 
+@app.get("/api/v1/currencies")
+def get_currencies():
+    return {"currencies": list(USD_EXCHANGE_RATES.keys())}
+
 @app.get("/api/v1/trip-categories")
 def get_trip_categories():
     return {"categories": ["Backpacker", "Standard", "Luxury"]}
@@ -173,6 +178,9 @@ def create_trip(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    if trip_request.currency.upper() not in USD_EXCHANGE_RATES:
+        raise HTTPException(422, f"Unsupported currency: {trip_request.currency}")
+
     recommended_places = []
     for dest in trip_request.destination.split(","):
             for place in get_recommended_places(dest.strip()):
