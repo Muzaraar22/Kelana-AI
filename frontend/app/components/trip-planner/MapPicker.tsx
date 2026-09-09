@@ -53,7 +53,10 @@ export default function MapPicker({ value, onPick }: MapPickerProps) {
       center={[-2.5, 118]}
       zoom={4}
       scrollWheelZoom
-      className="h-[300px] w-full rounded-xl border border-zinc-200 dark:border-zinc-800 lg:h-full lg:min-h-[420px]"
+      // `isolate` traps Leaflet's internal z-index:1000 panes/controls inside
+      // the map's own stacking context so they can't paint over the sticky
+      // navbar / its mobile dropdown.
+      className="isolate h-[300px] w-full overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 lg:h-full lg:min-h-[420px]"
     >
       <TileLayer
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"

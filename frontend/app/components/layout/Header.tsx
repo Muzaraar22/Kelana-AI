@@ -70,7 +70,7 @@ export default function Header() {
       </div>
 
       {isOpen && (
-        <nav className="absolute inset-x-0 top-full border-t border-black/[.06] bg-white/80 px-6 py-4 backdrop-blur dark:border-white/[.08] dark:bg-black/80 sm:hidden">
+        <nav className="absolute inset-x-0 top-full z-30 border-t border-black/[.06] bg-white/95 px-6 py-4 backdrop-blur dark:border-white/[.08] dark:bg-black/95 sm:hidden">
           <div className="flex flex-col gap-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">
             <Link href="/#cara-kerja" onClick={close} className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-50">
               Cara Kerja

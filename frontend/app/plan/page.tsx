@@ -44,8 +44,8 @@ export default async function PlanPage() {
           Rencanakan Trip
         </h1>
         <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Halo {user.name.split(" ")[0]}, pilih titik di peta atau cari destinasi, lalu atur budget
-          dan gaya perjalananmu.
+          Halo {user.name.trim().split(/\s+/).slice(0, 2).join(" ")}, pilih titik di peta atau cari
+          destinasi, lalu atur budget dan gaya perjalananmu.
         </p>
       </header>
 

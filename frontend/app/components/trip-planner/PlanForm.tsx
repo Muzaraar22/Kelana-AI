@@ -166,7 +166,7 @@ export default function PlanForm({ onSubmit, isLoading, currencies }: PlanFormPr
               className={`${inputClass} w-full pl-9`}
             />
             {showSug && suggestions.length > 0 && (
-              <ul className="absolute z-[1000] mt-1 max-h-64 w-full overflow-auto rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
+              <ul className="absolute z-10 mt-1 max-h-64 w-full overflow-auto rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
                 {suggestions.map((s, i) => (
                   <li key={`${s.lat},${s.lng},${i}`}>
                     <button
